@@ -28,27 +28,73 @@ class Pawn(Figure):
     def name(self) -> str:
         return "P"
 
+class Rook(Figure):
+    def name(self) -> str:
+        return "R"
+
+class King(Figure):
+    def name(self) -> str:
+        return "K"
+
+class Queen(Figure):
+    def name(self) -> str:
+        return "Q"
+
+class Knight(Figure):
+    def name(self) -> str:
+        return "N"
+
+class Bishop(Figure):
+    def name(self) -> str:
+        return "B"
 
 class Board:
     def __init__(self) -> None:
-        # self.fields[1][a] is bottom left, self.fields[1][h] is bottom right
-        self.fields: list[list[Figure | None]] =  [[None] * 8] * 8
+        # self._fields[1][a] is bottom left, self._fields[1][h] is bottom right
+        self._fields: list[list[Figure | None]] = []
+        for row_index in range(8):
+            self._fields.append([None] * 8)
 
-        self.fields[1] = [Pawn(Color.WHITE)] * 8
-        self.fields[6] = [Pawn(Color.BLACK)] * 8
+        self._fields[0][4] = King(Color.WHITE)
+        self._fields[7][4] = King(Color.BLACK)
+
+        self._fields[0][3] = Queen(Color.WHITE)
+        self._fields[7][3] = Queen(Color.BLACK)
+
+        self._fields[0][2] = Bishop(Color.WHITE)
+        self._fields[7][2] = Bishop(Color.BLACK)
+        self._fields[0][5] = Bishop(Color.WHITE)
+        self._fields[7][5] = Bishop(Color.BLACK)
+
+        self._fields[0][1] = Knight(Color.WHITE)
+        self._fields[7][1] = Knight(Color.BLACK)
+        self._fields[0][6] = Knight(Color.WHITE)
+        self._fields[7][6] = Knight(Color.BLACK)
+
+        self._fields[0][0] = Rook(Color.WHITE)
+        self._fields[7][0] = Rook(Color.BLACK)
+        self._fields[0][7] = Rook(Color.WHITE)
+        self._fields[7][7] = Rook(Color.BLACK)
+
+        self._fields[1] = [Pawn(Color.WHITE)] * 8
+        self._fields[6] = [Pawn(Color.BLACK)] * 8
 
     def __str__(self) -> str:
-        color = "\033[102m"
+        light = "\u001b[42m"
+        dark = "\u001b[43m"
         clear = "\033[0m"
-        lines = [
-            "".join([
-                f"{color}{field or ' '}{clear}"
-                for field
-                in row
-            ])
-            for row in
-            self.fields
-        ]
+
+        lines = ["  ABCDEFGH"]
+
+        for row_index, row in enumerate(self._fields):
+            line = f"{row_index + 1} "
+            for field_index, field in enumerate(row):
+                color = (
+                    dark if (row_index + field_index) % 2 == 0 else light
+                )
+                line += f"{color}{field or ' '}{clear}"
+            lines.append(line)
+
         return "\n".join(reversed(lines))
 
 
