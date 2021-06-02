@@ -1,0 +1,3 @@
+# CHESS
+
+Simple chess application. Not sure where this is going...
